@@ -78,11 +78,17 @@ public final class VillageDecorationManager {
     }
 
     private static void processPendingChunks(net.minecraft.server.MinecraftServer server) {
+        // Chunk inspection can indirectly cause additional chunk-load events.
+        // Never run decoration while iterating PENDING_CHUNKS, because those
+        // events can enqueue into the same maps and invalidate the iterators.
+        List<PendingDecoration> ready = new ArrayList<>();
+
         var levelIterator = PENDING_CHUNKS.entrySet().iterator();
 
         while (levelIterator.hasNext()) {
             var levelEntry = levelIterator.next();
             ServerLevel level = levelEntry.getKey();
+
             if (level == null) {
                 levelIterator.remove();
                 continue;
@@ -92,7 +98,7 @@ public final class VillageDecorationManager {
                 continue;
             }
 
-            var chunks = levelEntry.getValue();
+            Map<ChunkPos, Integer> chunks = levelEntry.getValue();
             var chunkIterator = chunks.entrySet().iterator();
 
             while (chunkIterator.hasNext()) {
@@ -104,14 +110,20 @@ public final class VillageDecorationManager {
                     continue;
                 }
 
-                ChunkPos chunkPos = chunkEntry.getKey();
+                ready.add(new PendingDecoration(level, chunkEntry.getKey()));
                 chunkIterator.remove();
-                decorateLoadedChunk(level, chunkPos);
             }
 
             if (chunks.isEmpty()) {
                 levelIterator.remove();
             }
+        }
+
+        // All map iterators are closed before decoration begins. If decoration
+        // causes more chunks to load, queueChunk() may safely add them for a
+        // future tick.
+        for (PendingDecoration pending : ready) {
+            decorateLoadedChunk(pending.level(), pending.chunkPos());
         }
     }
 
@@ -140,6 +152,13 @@ public final class VillageDecorationManager {
             }
 
             long villageKey = village.getChunkPos().pack();
+            boolean bowlResolved = data.isFoodBowlResolved(villageKey);
+            boolean troughResolved = data.isFeedingTroughResolved(villageKey);
+
+            if (bowlResolved && troughResolved) {
+                continue;
+            }
+
             List<LevelChunk> loadedVillageChunks = getLoadedVillageChunks(level, village);
 
             diagnostics(
@@ -148,8 +167,8 @@ public final class VillageDecorationManager {
                     chunkPos,
                     level.dimension(),
                     loadedVillageChunks.size(),
-                    data.isFoodBowlResolved(villageKey),
-                    data.isFeedingTroughResolved(villageKey)
+                    bowlResolved,
+                    troughResolved
             );
 
             processFoodBowl(level, loadedVillageChunks, village, villageKey, data);
@@ -569,6 +588,9 @@ public final class VillageDecorationManager {
         if (WORLDGEN_DIAGNOSTICS) {
             WellFed.LOGGER.info("[VillageGen] " + message, args);
         }
+    }
+
+    private record PendingDecoration(ServerLevel level, ChunkPos chunkPos) {
     }
 
     private record Candidate(BlockPos pos, int distance) {
