@@ -1,6 +1,5 @@
 package com.nightspath.temptingtrough.block;
 
-import com.mojang.serialization.MapCodec;
 import com.nightspath.temptingtrough.block.entity.FoodBowlBlockEntity;
 import com.nightspath.temptingtrough.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -21,11 +20,6 @@ import org.jspecify.annotations.Nullable;
 public final class FoodBowlBlock extends BaseEntityBlock {
     public FoodBowlBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return simpleCodec(FoodBowlBlock::new);
     }
 
     @Override
