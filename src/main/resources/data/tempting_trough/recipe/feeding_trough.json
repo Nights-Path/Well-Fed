@@ -1,11 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "H": "minecraft:hay_block",
+    "W": "minecraft:wheat",
     "S": "#minecraft:wooden_slabs"
   },
   "pattern": [
-    "HHH",
+    "WWW",
     "SSS"
   ],
   "result": {
