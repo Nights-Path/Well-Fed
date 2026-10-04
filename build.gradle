@@ -17,7 +17,7 @@ loom {
     splitEnvironmentSourceSets()
 
     mods {
-        "tempting_trough" {
+        "well_fed" {
             sourceSet sourceSets.main
             sourceSet sourceSets.client
         }

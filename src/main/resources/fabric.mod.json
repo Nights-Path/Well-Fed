@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "tempting_trough",
+  "id": "well_fed",
   "version": "${version}",
   "name": "Well Fed",
   "description": "Feeding troughs that keep matching animals nearby and food bowls that heal tamed cats and wolves.",
@@ -14,10 +14,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.nightspath.temptingtrough.TemptingTrough"
+      "com.nightspath.wellfed.WellFed"
     ],
     "client": [
-      "com.nightspath.temptingtrough.client.TemptingTroughClient"
+      "com.nightspath.wellfed.client.WellFedClient"
     ]
   },
   "depends": {
@@ -26,5 +26,5 @@
     "java": ">=25",
     "fabric-api": "*"
   },
-  "icon": "assets/tempting_trough/icon.png"
+  "icon": "assets/well_fed/icon.png"
 }

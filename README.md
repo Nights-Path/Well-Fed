@@ -5,7 +5,7 @@ A Fabric mod for Minecraft 26.3 that adds a Feeding Trough for livestock-style a
 ## Feeding Trough
 
 - 5 inventory slots.
-- Accepts only items in the `tempting_trough:trough_foods` item tag.
+- Accepts only items in the `well_fed:trough_foods` item tag.
 - Hoppers and Fabric Transfer API-compatible pipes can insert/extract.
 - An animal is only affected when the trough contains an item that the animal itself considers food.
 - Tamed animals are excluded from trough behavior.
@@ -50,7 +50,7 @@ SSS
 ```
 
 - `S`: Any wooden slab
-- `F`: Any item in `tempting_trough:food_bowl_crafting_food`:
+- `F`: Any item in `well_fed:food_bowl_crafting_food`:
   - any vanilla fish
   - raw beef
   - raw chicken
@@ -63,7 +63,7 @@ SSS
 
 All vanilla village chest loot tables receive one additional independent loot pool:
 
-- 1% chance per eligible village chest to contain one Tempting Trough block.
+- 1% chance per eligible village chest to contain one Well Fed block.
 - When that 1% roll succeeds, it chooses equally between a Feeding Trough and a Food Bowl.
 - Vanilla chest contents are preserved; the mod only adds this small extra pool.
 - Datapack-overridden village loot tables are left untouched.
@@ -86,6 +86,7 @@ Village decorations are applied after a newly generated village chunk is loaded 
 - Fabric API: 0.161.0+26.3
 - Java: 25
 - Mod version: 0.1.0
+- Mod ID: `well_fed`
 
 Build with:
 
