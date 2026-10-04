@@ -1,8 +1,8 @@
-package com.nightspath.temptingtrough.world;
+package com.nightspath.wellfed.world;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.nightspath.temptingtrough.TemptingTrough;
+import com.nightspath.wellfed.WellFed;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +24,7 @@ public final class VillageDecorationData extends SavedData {
 
     public static final SavedDataType<VillageDecorationData> TYPE =
             new SavedDataType<>(
-                    TemptingTrough.id("village_decorations"),
+                    WellFed.id("village_decorations"),
                     VillageDecorationData::new,
                     CODEC,
                     null

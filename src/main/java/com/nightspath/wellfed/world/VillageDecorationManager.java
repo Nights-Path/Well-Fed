@@ -1,9 +1,9 @@
-package com.nightspath.temptingtrough.world;
+package com.nightspath.wellfed.world;
 
-import com.nightspath.temptingtrough.TemptingTrough;
-import com.nightspath.temptingtrough.block.FeedingTroughBlock;
-import com.nightspath.temptingtrough.block.ModBlocks;
-import com.nightspath.temptingtrough.block.entity.FoodBowlBlockEntity;
+import com.nightspath.wellfed.WellFed;
+import com.nightspath.wellfed.block.FeedingTroughBlock;
+import com.nightspath.wellfed.block.ModBlocks;
+import com.nightspath.wellfed.block.entity.FoodBowlBlockEntity;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -137,7 +137,7 @@ public final class VillageDecorationManager {
 
             if (placeFoodBowl(level, placement, villageKey)) {
                 data.resolveFoodBowl(villageKey);
-                TemptingTrough.LOGGER.debug(
+                WellFed.LOGGER.debug(
                         "Generated village food bowl at {} for village start {}",
                         placement,
                         village.getChunkPos()
@@ -195,7 +195,7 @@ public final class VillageDecorationManager {
 
             if (level.setBlockAndUpdate(placement, troughState)) {
                 data.resolveFeedingTrough(villageKey);
-                TemptingTrough.LOGGER.debug(
+                WellFed.LOGGER.debug(
                         "Generated feeding trough at {} near butcher smoker {} for village start {}",
                         placement,
                         smoker,

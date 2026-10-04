@@ -1,7 +1,7 @@
-package com.nightspath.temptingtrough.client.screen;
+package com.nightspath.wellfed.client.screen;
 
-import com.nightspath.temptingtrough.TemptingTrough;
-import com.nightspath.temptingtrough.menu.FoodBowlMenu;
+import com.nightspath.wellfed.WellFed;
+import com.nightspath.wellfed.menu.FoodBowlMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public final class FoodBowlScreen extends AbstractContainerScreen<FoodBowlMenu> {
     private static final Identifier TEXTURE =
-            TemptingTrough.id("textures/gui/container/food_bowl.png");
+            WellFed.id("textures/gui/container/food_bowl.png");
     private static final int TEXTURE_WIDTH = 176;
     private static final int TEXTURE_HEIGHT = 132;
 

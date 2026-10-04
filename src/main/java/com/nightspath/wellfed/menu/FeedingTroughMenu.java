@@ -1,4 +1,4 @@
-package com.nightspath.temptingtrough.menu;
+package com.nightspath.wellfed.menu;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;

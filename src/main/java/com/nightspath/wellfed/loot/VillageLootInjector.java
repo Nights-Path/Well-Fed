@@ -1,6 +1,6 @@
-package com.nightspath.temptingtrough.loot;
+package com.nightspath.wellfed.loot;
 
-import com.nightspath.temptingtrough.block.ModBlocks;
+import com.nightspath.wellfed.block.ModBlocks;
 import java.util.Set;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.resources.ResourceKey;

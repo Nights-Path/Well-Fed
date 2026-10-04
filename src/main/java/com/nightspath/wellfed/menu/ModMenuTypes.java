@@ -1,6 +1,6 @@
-package com.nightspath.temptingtrough.menu;
+package com.nightspath.wellfed.menu;
 
-import com.nightspath.temptingtrough.TemptingTrough;
+import com.nightspath.wellfed.WellFed;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -23,7 +23,7 @@ public final class ModMenuTypes {
     ) {
         return Registry.register(
                 BuiltInRegistries.MENU,
-                TemptingTrough.id(name),
+                WellFed.id(name),
                 new MenuType<>(supplier, FeatureFlagSet.of())
         );
     }

@@ -1,6 +1,6 @@
-package com.nightspath.temptingtrough.client.screen;
+package com.nightspath.wellfed.client.screen;
 
-import com.nightspath.temptingtrough.menu.FeedingTroughMenu;
+import com.nightspath.wellfed.menu.FeedingTroughMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
