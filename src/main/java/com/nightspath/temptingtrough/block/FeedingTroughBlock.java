@@ -31,24 +31,47 @@ public final class FeedingTroughBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty FILLED = BooleanProperty.create("filled");
 
+    // Visible/selection shape: full 16x16 footprint.
     private static final VoxelShape SHAPE_EAST_WEST = Shapes.or(
-            Block.box(1.0, 0.0, 4.0, 15.0, 2.0, 12.0),
-            Block.box(1.0, 2.0, 3.0, 15.0, 8.0, 5.0),
-            Block.box(1.0, 2.0, 11.0, 15.0, 8.0, 13.0),
-            Block.box(0.0, 0.0, 3.0, 2.0, 11.0, 5.0),
-            Block.box(0.0, 0.0, 11.0, 2.0, 11.0, 13.0),
-            Block.box(14.0, 0.0, 3.0, 16.0, 11.0, 5.0),
-            Block.box(14.0, 0.0, 11.0, 16.0, 11.0, 13.0)
+            Block.box(1.0, 0.0, 0.0, 15.0, 2.0, 16.0),
+            Block.box(1.0, 2.0, 0.0, 15.0, 8.0, 2.0),
+            Block.box(1.0, 2.0, 14.0, 15.0, 8.0, 16.0),
+            Block.box(0.0, 0.0, 0.0, 2.0, 11.0, 2.0),
+            Block.box(0.0, 0.0, 14.0, 2.0, 11.0, 16.0),
+            Block.box(14.0, 0.0, 0.0, 16.0, 11.0, 2.0),
+            Block.box(14.0, 0.0, 14.0, 16.0, 11.0, 16.0)
     );
 
     private static final VoxelShape SHAPE_NORTH_SOUTH = Shapes.or(
-            Block.box(4.0, 0.0, 1.0, 12.0, 2.0, 15.0),
-            Block.box(3.0, 2.0, 1.0, 5.0, 8.0, 15.0),
-            Block.box(11.0, 2.0, 1.0, 13.0, 8.0, 15.0),
-            Block.box(3.0, 0.0, 0.0, 5.0, 11.0, 2.0),
-            Block.box(11.0, 0.0, 0.0, 13.0, 11.0, 2.0),
-            Block.box(3.0, 0.0, 14.0, 5.0, 11.0, 16.0),
-            Block.box(11.0, 0.0, 14.0, 13.0, 11.0, 16.0)
+            Block.box(0.0, 0.0, 1.0, 16.0, 2.0, 15.0),
+            Block.box(0.0, 2.0, 1.0, 2.0, 8.0, 15.0),
+            Block.box(14.0, 2.0, 1.0, 16.0, 8.0, 15.0),
+            Block.box(0.0, 0.0, 0.0, 2.0, 11.0, 2.0),
+            Block.box(14.0, 0.0, 0.0, 16.0, 11.0, 2.0),
+            Block.box(0.0, 0.0, 14.0, 2.0, 11.0, 16.0),
+            Block.box(14.0, 0.0, 14.0, 16.0, 11.0, 16.0)
+    );
+
+    // Fence/wall-like collision: the rim extends to 1.5 blocks high so mobs
+    // cannot jump onto or over the trough walls even though the model is lower.
+    private static final VoxelShape COLLISION_EAST_WEST = Shapes.or(
+            Block.box(1.0, 0.0, 0.0, 15.0, 2.0, 16.0),
+            Block.box(1.0, 2.0, 0.0, 15.0, 24.0, 2.0),
+            Block.box(1.0, 2.0, 14.0, 15.0, 24.0, 16.0),
+            Block.box(0.0, 0.0, 0.0, 2.0, 24.0, 2.0),
+            Block.box(0.0, 0.0, 14.0, 2.0, 24.0, 16.0),
+            Block.box(14.0, 0.0, 0.0, 16.0, 24.0, 2.0),
+            Block.box(14.0, 0.0, 14.0, 16.0, 24.0, 16.0)
+    );
+
+    private static final VoxelShape COLLISION_NORTH_SOUTH = Shapes.or(
+            Block.box(0.0, 0.0, 1.0, 16.0, 2.0, 15.0),
+            Block.box(0.0, 2.0, 1.0, 2.0, 24.0, 15.0),
+            Block.box(14.0, 2.0, 1.0, 16.0, 24.0, 15.0),
+            Block.box(0.0, 0.0, 0.0, 2.0, 24.0, 2.0),
+            Block.box(14.0, 0.0, 0.0, 16.0, 24.0, 2.0),
+            Block.box(0.0, 0.0, 14.0, 2.0, 24.0, 16.0),
+            Block.box(14.0, 0.0, 14.0, 16.0, 24.0, 16.0)
     );
 
     public FeedingTroughBlock(Properties properties) {
@@ -71,6 +94,12 @@ public final class FeedingTroughBlock extends BaseEntityBlock {
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         Direction facing = state.getValue(FACING);
         return facing.getAxis() == Direction.Axis.Z ? SHAPE_EAST_WEST : SHAPE_NORTH_SOUTH;
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        Direction facing = state.getValue(FACING);
+        return facing.getAxis() == Direction.Axis.Z ? COLLISION_EAST_WEST : COLLISION_NORTH_SOUTH;
     }
 
     @Override
