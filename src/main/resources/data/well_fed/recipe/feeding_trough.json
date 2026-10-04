@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "W": "minecraft:wheat",
+    "S": "#minecraft:wooden_slabs"
+  },
+  "pattern": [
+    "WWW",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "well_fed:feeding_trough"
+  }
+}

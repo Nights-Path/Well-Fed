@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "well_fed:block/feeding_trough_empty"
+  }
+}

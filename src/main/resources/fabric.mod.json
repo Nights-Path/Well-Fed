@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "well_fed",
+  "version": "${version}",
+  "name": "Well Fed",
+  "description": "Feeding troughs that keep matching animals nearby and food bowls that heal tamed cats and wolves.",
+  "authors": [
+    "Nights-Path"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.nightspath.wellfed.WellFed"
+    ],
+    "client": [
+      "com.nightspath.wellfed.client.WellFedClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "icon": "assets/well_fed/icon.png"
+}
