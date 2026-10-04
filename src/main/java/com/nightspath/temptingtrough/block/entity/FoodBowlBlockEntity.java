@@ -1,5 +1,6 @@
 package com.nightspath.temptingtrough.block.entity;
 
+import com.nightspath.temptingtrough.menu.FilteredChestMenu;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -14,7 +15,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,7 +42,7 @@ public final class FoodBowlBlockEntity extends FilteredContainerBlockEntity impl
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return ChestMenu.threeRows(containerId, inventory, this);
+        return new FilteredChestMenu(containerId, inventory, this);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, FoodBowlBlockEntity bowl) {
