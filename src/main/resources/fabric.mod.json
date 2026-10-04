@@ -7,9 +7,6 @@
   "authors": [
     "Nights-Path"
   ],
-  "contact": {
-    "sources": "https://github.com/Nights-Path/Tempting-Trough"
-  },
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
