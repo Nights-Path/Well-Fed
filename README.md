@@ -4,7 +4,7 @@ A Fabric mod for Minecraft 26.3 that adds a Feeding Trough for livestock-style a
 
 ## Feeding Trough
 
-- 9 inventory slots (1 row of 9).
+- 5 inventory slots.
 - Accepts only items in the `tempting_trough:trough_foods` item tag.
 - Hoppers and Fabric Transfer API-compatible pipes can insert/extract.
 - An animal is only affected when the trough contains an item that the animal itself considers food.

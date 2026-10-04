@@ -1,7 +1,7 @@
 package com.nightspath.temptingtrough.block.entity;
 
 import com.nightspath.temptingtrough.block.FeedingTroughBlock;
-import com.nightspath.temptingtrough.menu.FilteredChestMenu;
+import com.nightspath.temptingtrough.menu.FeedingTroughMenu;
 import com.nightspath.temptingtrough.tag.ModItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 public final class FeedingTroughBlockEntity extends FilteredContainerBlockEntity implements MenuProvider {
-    public static final int CONTAINER_SIZE = 9;
+    public static final int CONTAINER_SIZE = 5;
     public static final int INFLUENCE_RADIUS = 4;
     public static final int INTERACTION_RADIUS = 2;
 
@@ -70,6 +70,6 @@ public final class FeedingTroughBlockEntity extends FilteredContainerBlockEntity
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new FilteredChestMenu(containerId, inventory, this);
+        return new FeedingTroughMenu(containerId, inventory, this);
     }
 }
