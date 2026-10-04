@@ -1,6 +1,6 @@
-package com.nightspath.temptingtrough.block;
+package com.nightspath.wellfed.block;
 
-import com.nightspath.temptingtrough.block.entity.FeedingTroughBlockEntity;
+import com.nightspath.wellfed.block.entity.FeedingTroughBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

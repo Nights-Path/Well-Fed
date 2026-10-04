@@ -1,4 +1,4 @@
-package com.nightspath.temptingtrough.block.entity;
+package com.nightspath.wellfed.block.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

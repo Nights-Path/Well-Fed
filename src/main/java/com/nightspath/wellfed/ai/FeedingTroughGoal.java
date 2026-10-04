@@ -1,13 +1,13 @@
-package com.nightspath.temptingtrough.ai;
+package com.nightspath.wellfed.ai;
 
-import com.nightspath.temptingtrough.block.entity.FeedingTroughBlockEntity;
+import com.nightspath.wellfed.block.entity.FeedingTroughBlockEntity;
 import java.util.EnumSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Level;
 
-public final class TemptingTroughGoal extends Goal {
+public final class FeedingTroughGoal extends Goal {
     private static final double MOVE_SPEED = 1.0;
     private static final int SAFE_RADIUS = 2;
     private static final int SEARCH_INTERVAL_TICKS = 20;
@@ -16,7 +16,7 @@ public final class TemptingTroughGoal extends Goal {
     private FeedingTroughBlockEntity trough;
     private int searchCooldown;
 
-    public TemptingTroughGoal(Animal animal) {
+    public FeedingTroughGoal(Animal animal) {
         this.animal = animal;
         this.searchCooldown = animal.getRandom().nextInt(SEARCH_INTERVAL_TICKS);
         setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));

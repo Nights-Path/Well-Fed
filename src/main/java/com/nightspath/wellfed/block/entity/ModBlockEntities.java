@@ -1,7 +1,7 @@
-package com.nightspath.temptingtrough.block.entity;
+package com.nightspath.wellfed.block.entity;
 
-import com.nightspath.temptingtrough.TemptingTrough;
-import com.nightspath.temptingtrough.block.ModBlocks;
+import com.nightspath.wellfed.WellFed;
+import com.nightspath.wellfed.block.ModBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,7 +26,7 @@ public final class ModBlockEntities {
     ) {
         return Registry.register(
                 BuiltInRegistries.BLOCK_ENTITY_TYPE,
-                TemptingTrough.id(name),
+                WellFed.id(name),
                 FabricBlockEntityTypeBuilder.<T>create(factory, blocks).build()
         );
     }

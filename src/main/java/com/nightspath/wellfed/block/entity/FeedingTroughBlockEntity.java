@@ -1,8 +1,8 @@
-package com.nightspath.temptingtrough.block.entity;
+package com.nightspath.wellfed.block.entity;
 
-import com.nightspath.temptingtrough.block.FeedingTroughBlock;
-import com.nightspath.temptingtrough.menu.FeedingTroughMenu;
-import com.nightspath.temptingtrough.tag.ModItemTags;
+import com.nightspath.wellfed.block.FeedingTroughBlock;
+import com.nightspath.wellfed.menu.FeedingTroughMenu;
+import com.nightspath.wellfed.tag.ModItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -65,7 +65,7 @@ public final class FeedingTroughBlockEntity extends FilteredContainerBlockEntity
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.tempting_trough.feeding_trough");
+        return Component.translatable("block.well_fed.feeding_trough");
     }
 
     @Override

@@ -1,7 +1,7 @@
-package com.nightspath.temptingtrough.block;
+package com.nightspath.wellfed.block;
 
-import com.nightspath.temptingtrough.block.entity.FoodBowlBlockEntity;
-import com.nightspath.temptingtrough.block.entity.ModBlockEntities;
+import com.nightspath.wellfed.block.entity.FoodBowlBlockEntity;
+import com.nightspath.wellfed.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;

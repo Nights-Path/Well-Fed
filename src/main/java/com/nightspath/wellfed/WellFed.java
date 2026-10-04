@@ -1,18 +1,18 @@
-package com.nightspath.temptingtrough;
+package com.nightspath.wellfed;
 
-import com.nightspath.temptingtrough.ai.TroughAnimalBehavior;
-import com.nightspath.temptingtrough.block.ModBlocks;
-import com.nightspath.temptingtrough.block.entity.ModBlockEntities;
-import com.nightspath.temptingtrough.loot.VillageLootInjector;
-import com.nightspath.temptingtrough.menu.ModMenuTypes;
-import com.nightspath.temptingtrough.world.VillageDecorationManager;
+import com.nightspath.wellfed.ai.TroughAnimalBehavior;
+import com.nightspath.wellfed.block.ModBlocks;
+import com.nightspath.wellfed.block.entity.ModBlockEntities;
+import com.nightspath.wellfed.loot.VillageLootInjector;
+import com.nightspath.wellfed.menu.ModMenuTypes;
+import com.nightspath.wellfed.world.VillageDecorationManager;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class TemptingTrough implements ModInitializer {
-    public static final String MOD_ID = "tempting_trough";
+public final class WellFed implements ModInitializer {
+    public static final String MOD_ID = "well_fed";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static Identifier id(String path) {
@@ -28,6 +28,6 @@ public final class TemptingTrough implements ModInitializer {
         VillageDecorationManager.initialize();
         VillageLootInjector.initialize();
 
-        LOGGER.info("Tempting Trough initialized.");
+        LOGGER.info("Well Fed initialized.");
     }
 }

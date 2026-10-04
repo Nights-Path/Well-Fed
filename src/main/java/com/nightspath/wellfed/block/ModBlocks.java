@@ -1,6 +1,6 @@
-package com.nightspath.temptingtrough.block;
+package com.nightspath.wellfed.block;
 
-import com.nightspath.temptingtrough.TemptingTrough;
+import com.nightspath.wellfed.WellFed;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
@@ -36,7 +36,7 @@ public final class ModBlocks {
             Function<BlockBehaviour.Properties, Block> factory,
             BlockBehaviour.Properties properties
     ) {
-        Identifier id = TemptingTrough.id(path);
+        Identifier id = WellFed.id(path);
         ResourceKey<Block> blockKey = ResourceKey.create(Registries.BLOCK, id);
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);
 

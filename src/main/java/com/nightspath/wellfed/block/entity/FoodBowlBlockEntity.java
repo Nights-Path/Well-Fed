@@ -1,7 +1,7 @@
-package com.nightspath.temptingtrough.block.entity;
+package com.nightspath.wellfed.block.entity;
 
-import com.nightspath.temptingtrough.block.FoodBowlBlock;
-import com.nightspath.temptingtrough.menu.FoodBowlMenu;
+import com.nightspath.wellfed.block.FoodBowlBlock;
+import com.nightspath.wellfed.menu.FoodBowlMenu;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -58,7 +58,7 @@ public final class FoodBowlBlockEntity extends FilteredContainerBlockEntity impl
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.tempting_trough.food_bowl");
+        return Component.translatable("block.well_fed.food_bowl");
     }
 
     @Override
