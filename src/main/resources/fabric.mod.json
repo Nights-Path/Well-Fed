@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "tempting_trough",
+  "version": "${version}",
+  "name": "Tempting Trough",
+  "description": "Feeding troughs that keep matching animals nearby and food bowls that heal tamed cats and wolves.",
+  "authors": [
+    "Nights-Path"
+  ],
+  "contact": {
+    "sources": "https://github.com/Nights-Path/Tempting-Trough"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.nightspath.temptingtrough.TemptingTrough"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
