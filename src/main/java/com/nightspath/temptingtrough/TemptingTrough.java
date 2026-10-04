@@ -3,7 +3,9 @@ package com.nightspath.temptingtrough;
 import com.nightspath.temptingtrough.ai.TroughAnimalBehavior;
 import com.nightspath.temptingtrough.block.ModBlocks;
 import com.nightspath.temptingtrough.block.entity.ModBlockEntities;
+import com.nightspath.temptingtrough.loot.VillageLootInjector;
 import com.nightspath.temptingtrough.menu.ModMenuTypes;
+import com.nightspath.temptingtrough.world.VillageDecorationManager;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -23,6 +25,8 @@ public final class TemptingTrough implements ModInitializer {
         ModBlocks.initialize();
         ModBlockEntities.initialize();
         TroughAnimalBehavior.initialize();
+        VillageDecorationManager.initialize();
+        VillageLootInjector.initialize();
 
         LOGGER.info("Tempting Trough initialized.");
     }

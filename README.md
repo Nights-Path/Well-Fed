@@ -16,6 +16,7 @@ A Fabric mod for Minecraft 26.3 that adds a Feeding Trough for livestock-style a
 - There is no population cap and no extra breeding cooldown beyond vanilla rules.
 - The trough goal has lower priority than ordinary player temptation/breeding behavior, so animals can still be deliberately lured out.
 - Inactive troughs do nothing to an animal when they contain no matching food.
+- During new village generation, butcher-containing villages have a 75% deterministic chance to receive one trough near a smoker. This is intended to produce an overall frequency near one trough every 3–5 villages, depending on how often a village generates a butcher building.
 
 The default `trough_foods` tag is intentionally crop/seed focused. Datapacks and mods can extend the tag.
 
@@ -38,6 +39,8 @@ SSS
 - Cats consume only `minecraft:cat_food`; wolves consume only `minecraft:wolf_food`.
 - Healing uses the consumed item's vanilla food nutrition value.
 - Sitting pets remain sitting because the bowl never adds a movement goal.
+- During new village generation, each village has a deterministic 40% chance to receive one bowl near a village bed.
+- Naturally generated bowls start with 1–3 food stacks randomly distributed among their three slots. Fish and raw meats are common; rotten flesh is uncommon.
 
 ### Crafting
 
@@ -55,6 +58,26 @@ SSS
   - raw mutton
   - raw rabbit
   - rotten flesh
+
+## Village chest loot
+
+All vanilla village chest loot tables receive one additional independent loot pool:
+
+- 1% chance per eligible village chest to contain one Tempting Trough block.
+- When that 1% roll succeeds, it chooses equally between a Feeding Trough and a Food Bowl.
+- Vanilla chest contents are preserved; the mod only adds this small extra pool.
+- Datapack-overridden village loot tables are left untouched.
+
+## World generation behavior
+
+Village decorations are applied after a newly generated village chunk is loaded into the server:
+
+- Placement is deterministic from the world seed and village start, so chunk reloads cannot reroll placement.
+- A persistent per-dimension record prevents duplicate decoration if additional chunks of the same village generate later.
+- Food Bowls search for a safe floor location near a village bed.
+- Feeding Troughs search for a safe location near a smoker inside a village structure.
+- Paths and farmland are not overwritten.
+- Existing already-generated villages are not retroactively decorated; the feature applies as new village chunks generate.
 
 ## Development
 
@@ -77,7 +100,3 @@ gradlew.bat build
 ```
 
 Built jars are written to `build/libs`.
-
-## World generation
-
-World generation is not implemented yet. Its design will be handled separately after the inventory and crafting changes are finalized.
