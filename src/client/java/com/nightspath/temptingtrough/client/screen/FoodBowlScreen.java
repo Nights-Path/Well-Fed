@@ -16,9 +16,7 @@ public final class FoodBowlScreen extends AbstractContainerScreen<FoodBowlMenu> 
     private static final int TEXTURE_HEIGHT = 132;
 
     public FoodBowlScreen(FoodBowlMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title);
-        this.imageWidth = TEXTURE_WIDTH;
-        this.imageHeight = TEXTURE_HEIGHT;
+        super(menu, inventory, title, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         this.titleLabelY = 5;
         this.inventoryLabelY = 39;
