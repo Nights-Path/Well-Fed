@@ -16,7 +16,7 @@ A Fabric mod for Minecraft 26.3 that adds a Feeding Trough for livestock-style a
 - There is no population cap and no extra breeding cooldown beyond vanilla rules.
 - The trough goal has lower priority than ordinary player temptation/breeding behavior, so animals can still be deliberately lured out.
 - Inactive troughs do nothing to an animal when they contain no matching food.
-- During new village generation, butcher-containing villages have a 75% deterministic chance to receive one trough near a smoker. This is intended to produce an overall frequency near one trough every 3–5 villages, depending on how often a village generates a butcher building.
+- Villages have a deterministic 25% chance to receive one trough. Butcher/smoker placement is preferred when available; otherwise the trough falls back to a safe general-village location near a bed.
 
 The default `trough_foods` tag is intentionally crop/seed focused. Datapacks and mods can extend the tag.
 
@@ -70,14 +70,14 @@ All vanilla village chest loot tables receive one additional independent loot po
 
 ## World generation behavior
 
-Village decorations are applied after a newly generated village chunk is loaded into the server:
+Village decorations are evaluated shortly after village chunks load into the server:
 
 - Placement is deterministic from the world seed and village start, so chunk reloads cannot reroll placement.
 - A persistent per-dimension record prevents duplicate decoration if additional chunks of the same village generate later.
 - Food Bowls search for a safe floor location near a village bed.
-- Feeding Troughs search for a safe location near a smoker inside a village structure.
+- Feeding Troughs prefer a safe location near a butcher smoker, then fall back to a safe location near a village bed.
 - Paths and farmland are not overwritten.
-- Existing already-generated villages are not retroactively decorated; the feature applies as new village chunks generate.
+- Existing villages can be decorated when their chunks are loaded if that village has not already had its Well Fed decoration decision resolved.
 
 ## Development
 

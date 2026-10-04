@@ -6,9 +6,13 @@ import com.nightspath.wellfed.block.ModBlocks;
 import com.nightspath.wellfed.block.entity.FoodBowlBlockEntity;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.function.Predicate;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -30,13 +34,19 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 public final class VillageDecorationManager {
     private static final float FOOD_BOWL_VILLAGE_CHANCE = 0.40F;
-    private static final float TROUGH_CHANCE_WITH_BUTCHER = 0.75F;
+    private static final float FEEDING_TROUGH_VILLAGE_CHANCE = 0.25F;
+
+    private static final int DECORATION_DELAY_TICKS = 2;
+    private static final boolean WORLDGEN_DIAGNOSTICS = true;
 
     private static final long FOOD_BOWL_CHANCE_SALT = 0x4A6F7920426F776CL;
     private static final long FOOD_BOWL_POSITION_SALT = 0x426F776C506F734CL;
     private static final long FOOD_BOWL_LOOT_SALT = 0x426F776C4C6F6F74L;
     private static final long TROUGH_CHANCE_SALT = 0x54726F7567684368L;
     private static final long TROUGH_POSITION_SALT = 0x54726F756768506FL;
+
+    private static final Map<ServerLevel, Map<ChunkPos, Integer>> PENDING_CHUNKS =
+            new WeakHashMap<>();
 
     private static final List<WeightedFood> FOOD = List.of(
             new WeightedFood(Items.COD, 5, 1, 3),
@@ -48,25 +58,66 @@ public final class VillageDecorationManager {
             new WeightedFood(Items.RABBIT, 2, 1, 2),
             new WeightedFood(Items.ROTTEN_FLESH, 1, 1, 2)
     );
-    private static final int FOOD_TOTAL_WEIGHT = FOOD.stream().mapToInt(WeightedFood::weight).sum();
+    private static final int FOOD_TOTAL_WEIGHT =
+            FOOD.stream().mapToInt(WeightedFood::weight).sum();
 
     private VillageDecorationManager() {
     }
 
     public static void initialize() {
-        ServerChunkEvents.CHUNK_LOAD.register((level, chunk, generated) -> {
-            if (!generated) {
-                return;
-            }
+        ServerChunkEvents.CHUNK_LOAD.register((level, chunk, generated) ->
+                queueChunk(level, chunk.getPos()));
 
-            ChunkPos chunkPos = chunk.getPos();
-            level.getServer().execute(() -> decorateGeneratedChunk(level, chunkPos));
-        });
+        ServerTickEvents.END_SERVER_TICK.register(server -> processPendingChunks(server));
     }
 
-    private static void decorateGeneratedChunk(ServerLevel level, ChunkPos chunkPos) {
-        LevelChunk chunk = level.getChunkSource().getChunkNow(chunkPos.x(), chunkPos.z());
-        if (chunk == null) {
+    private static void queueChunk(ServerLevel level, ChunkPos chunkPos) {
+        PENDING_CHUNKS
+                .computeIfAbsent(level, ignored -> new LinkedHashMap<>())
+                .putIfAbsent(chunkPos, DECORATION_DELAY_TICKS);
+    }
+
+    private static void processPendingChunks(net.minecraft.server.MinecraftServer server) {
+        var levelIterator = PENDING_CHUNKS.entrySet().iterator();
+
+        while (levelIterator.hasNext()) {
+            var levelEntry = levelIterator.next();
+            ServerLevel level = levelEntry.getKey();
+            if (level == null) {
+                levelIterator.remove();
+                continue;
+            }
+
+            if (level.getServer() != server) {
+                continue;
+            }
+
+            var chunks = levelEntry.getValue();
+            var chunkIterator = chunks.entrySet().iterator();
+
+            while (chunkIterator.hasNext()) {
+                var chunkEntry = chunkIterator.next();
+                int ticksLeft = chunkEntry.getValue();
+
+                if (ticksLeft > 1) {
+                    chunkEntry.setValue(ticksLeft - 1);
+                    continue;
+                }
+
+                ChunkPos chunkPos = chunkEntry.getKey();
+                chunkIterator.remove();
+                decorateLoadedChunk(level, chunkPos);
+            }
+
+            if (chunks.isEmpty()) {
+                levelIterator.remove();
+            }
+        }
+    }
+
+    private static void decorateLoadedChunk(ServerLevel level, ChunkPos chunkPos) {
+        LevelChunk triggerChunk = level.getChunkSource().getChunkNow(chunkPos.x(), chunkPos.z());
+        if (triggerChunk == null) {
             return;
         }
 
@@ -89,15 +140,42 @@ public final class VillageDecorationManager {
             }
 
             long villageKey = village.getChunkPos().pack();
+            List<LevelChunk> loadedVillageChunks = getLoadedVillageChunks(level, village);
 
-            processFoodBowl(level, chunk, village, villageKey, data);
-            processFeedingTrough(level, chunk, village, villageKey, data);
+            diagnostics(
+                    "Village {} detected from chunk {} in {}. Loaded village chunks: {}. Bowl resolved: {}. Trough resolved: {}.",
+                    village.getChunkPos(),
+                    chunkPos,
+                    level.dimension(),
+                    loadedVillageChunks.size(),
+                    data.isFoodBowlResolved(villageKey),
+                    data.isFeedingTroughResolved(villageKey)
+            );
+
+            processFoodBowl(level, loadedVillageChunks, village, villageKey, data);
+            processFeedingTrough(level, loadedVillageChunks, village, villageKey, data);
         }
+    }
+
+    private static List<LevelChunk> getLoadedVillageChunks(
+            ServerLevel level,
+            StructureStart village
+    ) {
+        List<LevelChunk> chunks = new ArrayList<>();
+
+        village.getBoundingBox().intersectingChunks().forEach(chunkPos -> {
+            LevelChunk chunk = level.getChunkSource().getChunkNow(chunkPos.x(), chunkPos.z());
+            if (chunk != null) {
+                chunks.add(chunk);
+            }
+        });
+
+        return chunks;
     }
 
     private static void processFoodBowl(
             ServerLevel level,
-            LevelChunk chunk,
+            List<LevelChunk> loadedChunks,
             StructureStart village,
             long villageKey,
             VillageDecorationData data
@@ -108,48 +186,70 @@ public final class VillageDecorationManager {
 
         if (!rollChance(level, villageKey, FOOD_BOWL_CHANCE_SALT, FOOD_BOWL_VILLAGE_CHANCE)) {
             data.resolveFoodBowl(villageKey);
+            diagnostics(
+                    "Village {} did not roll a Food Bowl (40% chance).",
+                    village.getChunkPos()
+            );
             return;
         }
 
-        List<BlockPos> beds = findVillageAnchors(
+        List<VillageAnchor> beds = findVillageAnchors(
                 level,
-                chunk,
+                loadedChunks,
                 village,
                 state -> state.is(BlockTags.BEDS)
         );
 
+        diagnostics(
+                "Village {} rolled a Food Bowl. Found {} loaded bed anchor(s).",
+                village.getChunkPos(),
+                beds.size()
+        );
+
         if (beds.isEmpty()) {
+            diagnostics(
+                    "Village {} has no loaded bed anchors yet; Food Bowl remains unresolved and will retry on a later chunk load.",
+                    village.getChunkPos()
+            );
             return;
         }
 
-        RandomSource random = randomFor(
-                level,
-                villageKey ^ chunk.getPos().pack(),
-                FOOD_BOWL_POSITION_SALT
-        );
+        RandomSource random = randomFor(level, villageKey, FOOD_BOWL_POSITION_SALT);
         Util.shuffle(beds, random);
 
-        for (BlockPos bed : beds) {
-            BlockPos placement = findPlacementNear(level, chunk, bed, 3, false, random);
+        for (VillageAnchor bed : beds) {
+            BlockPos placement = findPlacementNear(
+                    level,
+                    bed.chunk(),
+                    bed.pos(),
+                    3,
+                    false,
+                    random
+            );
             if (placement == null) {
                 continue;
             }
 
             if (placeFoodBowl(level, placement, villageKey)) {
                 data.resolveFoodBowl(villageKey);
-                WellFed.LOGGER.debug(
-                        "Generated village food bowl at {} for village start {}",
+                diagnostics(
+                        "Placed Food Bowl at {} for village {}.",
                         placement,
                         village.getChunkPos()
                 );
                 return;
             }
         }
+
+        diagnostics(
+                "Village {} rolled a Food Bowl but no safe placement was found; it will retry on a later chunk load.",
+                village.getChunkPos()
+        );
     }
 
     private static void processFeedingTrough(
             ServerLevel level,
-            LevelChunk chunk,
+            List<LevelChunk> loadedChunks,
             StructureStart village,
             long villageKey,
             VillageDecorationData data
@@ -158,70 +258,159 @@ public final class VillageDecorationManager {
             return;
         }
 
-        List<BlockPos> smokers = findVillageAnchors(
+        if (!rollChance(
                 level,
-                chunk,
+                villageKey,
+                TROUGH_CHANCE_SALT,
+                FEEDING_TROUGH_VILLAGE_CHANCE
+        )) {
+            data.resolveFeedingTrough(villageKey);
+            diagnostics(
+                    "Village {} did not roll a Feeding Trough (25% chance).",
+                    village.getChunkPos()
+            );
+            return;
+        }
+
+        RandomSource random = randomFor(level, villageKey, TROUGH_POSITION_SALT);
+
+        List<VillageAnchor> smokers = findVillageAnchors(
+                level,
+                loadedChunks,
                 village,
                 state -> state.is(Blocks.SMOKER)
         );
 
-        if (smokers.isEmpty()) {
-            return;
+        if (!smokers.isEmpty()) {
+            diagnostics(
+                    "Village {} rolled a Feeding Trough and has {} loaded smoker anchor(s); trying butcher placement first.",
+                    village.getChunkPos(),
+                    smokers.size()
+            );
+
+            Util.shuffle(smokers, random);
+            for (VillageAnchor smoker : smokers) {
+                BlockPos placement = findPlacementNear(
+                        level,
+                        smoker.chunk(),
+                        smoker.pos(),
+                        5,
+                        true,
+                        random
+                );
+                if (placement == null) {
+                    continue;
+                }
+
+                if (placeFeedingTrough(level, placement, smoker.pos())) {
+                    data.resolveFeedingTrough(villageKey);
+                    diagnostics(
+                            "Placed Feeding Trough at {} near butcher smoker {} for village {}.",
+                            placement,
+                            smoker.pos(),
+                            village.getChunkPos()
+                    );
+                    return;
+                }
+            }
+
+            diagnostics(
+                    "Village {} had a smoker but no safe butcher-area placement; falling back to general village placement.",
+                    village.getChunkPos()
+            );
         }
 
-        if (!rollChance(level, villageKey, TROUGH_CHANCE_SALT, TROUGH_CHANCE_WITH_BUTCHER)) {
-            data.resolveFeedingTrough(villageKey);
-            return;
-        }
-
-        RandomSource random = randomFor(
+        List<VillageAnchor> beds = findVillageAnchors(
                 level,
-                villageKey ^ chunk.getPos().pack(),
-                TROUGH_POSITION_SALT
+                loadedChunks,
+                village,
+                state -> state.is(BlockTags.BEDS)
         );
-        Util.shuffle(smokers, random);
 
-        for (BlockPos smoker : smokers) {
-            BlockPos placement = findPlacementNear(level, chunk, smoker, 5, true, random);
+        diagnostics(
+                "Village {} general Feeding Trough fallback found {} loaded bed anchor(s).",
+                village.getChunkPos(),
+                beds.size()
+        );
+
+        if (beds.isEmpty()) {
+            diagnostics(
+                    "Village {} rolled a Feeding Trough but has no loaded fallback anchors yet; it remains unresolved and will retry.",
+                    village.getChunkPos()
+            );
+            return;
+        }
+
+        Util.shuffle(beds, random);
+        for (VillageAnchor bed : beds) {
+            BlockPos placement = findPlacementNear(
+                    level,
+                    bed.chunk(),
+                    bed.pos(),
+                    4,
+                    true,
+                    random
+            );
             if (placement == null) {
                 continue;
             }
 
-            Direction facing = troughFacingFor(placement, smoker);
-            BlockState troughState = ModBlocks.FEEDING_TROUGH
-                    .defaultBlockState()
-                    .setValue(FeedingTroughBlock.FACING, facing)
-                    .setValue(FeedingTroughBlock.FILLED, false);
-
-            if (level.setBlockAndUpdate(placement, troughState)) {
+            if (placeFeedingTrough(level, placement, bed.pos())) {
                 data.resolveFeedingTrough(villageKey);
-                WellFed.LOGGER.debug(
-                        "Generated feeding trough at {} near butcher smoker {} for village start {}",
+                diagnostics(
+                        "Placed general-village Feeding Trough at {} near bed {} for village {}.",
                         placement,
-                        smoker,
+                        bed.pos(),
                         village.getChunkPos()
                 );
                 return;
             }
         }
+
+        diagnostics(
+                "Village {} rolled a Feeding Trough but no safe general placement was found; it will retry on a later chunk load.",
+                village.getChunkPos()
+        );
     }
 
-    private static List<BlockPos> findVillageAnchors(
+    private static List<VillageAnchor> findVillageAnchors(
             ServerLevel level,
-            LevelChunk chunk,
+            List<LevelChunk> chunks,
             StructureStart village,
             Predicate<BlockState> predicate
     ) {
-        List<BlockPos> anchors = new ArrayList<>();
+        List<VillageAnchor> exactPieceAnchors = new ArrayList<>();
+        List<VillageAnchor> boundingBoxFallbackAnchors = new ArrayList<>();
 
-        chunk.findBlocks(predicate, (pos, state) -> {
-            BlockPos immutable = pos.immutable();
-            if (level.structureManager().structureHasPieceAt(immutable, village)) {
-                anchors.add(immutable);
-            }
-        });
+        for (LevelChunk chunk : chunks) {
+            chunk.findBlocks(predicate, (pos, state) -> {
+                BlockPos immutable = pos.immutable();
 
-        return anchors;
+                if (!village.getBoundingBox().isInside(immutable)) {
+                    return;
+                }
+
+                VillageAnchor anchor = new VillageAnchor(chunk, immutable);
+                boundingBoxFallbackAnchors.add(anchor);
+
+                if (level.structureManager().structureHasPieceAt(immutable, village)) {
+                    exactPieceAnchors.add(anchor);
+                }
+            });
+        }
+
+        if (!exactPieceAnchors.isEmpty()) {
+            return exactPieceAnchors;
+        }
+
+        if (!boundingBoxFallbackAnchors.isEmpty()) {
+            diagnostics(
+                    "Village {} anchor scan found matching blocks inside its overall bounds but not inside a structure piece; using bounding-box fallback.",
+                    village.getChunkPos()
+            );
+        }
+
+        return boundingBoxFallbackAnchors;
     }
 
     private static BlockPos findPlacementNear(
@@ -289,7 +478,25 @@ public final class VillageDecorationManager {
         return below.isFaceSturdy(level, belowPos, Direction.UP);
     }
 
-    private static boolean placeFoodBowl(ServerLevel level, BlockPos pos, long villageKey) {
+    private static boolean placeFeedingTrough(
+            ServerLevel level,
+            BlockPos placement,
+            BlockPos anchor
+    ) {
+        Direction facing = troughFacingFor(placement, anchor);
+        BlockState troughState = ModBlocks.FEEDING_TROUGH
+                .defaultBlockState()
+                .setValue(FeedingTroughBlock.FACING, facing)
+                .setValue(FeedingTroughBlock.FILLED, false);
+
+        return level.setBlockAndUpdate(placement, troughState);
+    }
+
+    private static boolean placeFoodBowl(
+            ServerLevel level,
+            BlockPos pos,
+            long villageKey
+    ) {
         if (!level.setBlockAndUpdate(pos, ModBlocks.FOOD_BOWL.defaultBlockState())) {
             return false;
         }
@@ -330,12 +537,12 @@ public final class VillageDecorationManager {
         return FOOD.getLast();
     }
 
-    private static Direction troughFacingFor(BlockPos trough, BlockPos smoker) {
-        int dx = smoker.getX() - trough.getX();
-        int dz = smoker.getZ() - trough.getZ();
+    private static Direction troughFacingFor(BlockPos trough, BlockPos anchor) {
+        int dx = anchor.getX() - trough.getX();
+        int dz = anchor.getZ() - trough.getZ();
 
         // The model's open ends run perpendicular to FACING. Orient the open
-        // ends toward the butcher area whenever possible.
+        // ends toward the nearby village anchor whenever possible.
         return Math.abs(dx) >= Math.abs(dz) ? Direction.NORTH : Direction.EAST;
     }
 
@@ -358,7 +565,16 @@ public final class VillageDecorationManager {
         return value ^ (value >>> 31);
     }
 
+    private static void diagnostics(String message, Object... args) {
+        if (WORLDGEN_DIAGNOSTICS) {
+            WellFed.LOGGER.info("[VillageGen] " + message, args);
+        }
+    }
+
     private record Candidate(BlockPos pos, int distance) {
+    }
+
+    private record VillageAnchor(LevelChunk chunk, BlockPos pos) {
     }
 
     private record WeightedFood(Item item, int weight, int minCount, int maxCount) {
