@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,8 +22,7 @@ import net.minecraft.world.phys.AABB;
 import org.jspecify.annotations.Nullable;
 
 public final class FoodBowlBlockEntity extends FilteredContainerBlockEntity implements MenuProvider {
-    // Temporary, isolated value pending the final capacity decision.
-    public static final int CONTAINER_SIZE = 9;
+    public static final int CONTAINER_SIZE = 27;
     public static final int INTERACTION_RADIUS = 2;
     private static final int CHECK_INTERVAL_TICKS = 20;
 
@@ -44,7 +42,7 @@ public final class FoodBowlBlockEntity extends FilteredContainerBlockEntity impl
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new ChestMenu(MenuType.GENERIC_9x1, containerId, inventory, this, 1);
+        return ChestMenu.threeRows(containerId, inventory, this);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, FoodBowlBlockEntity bowl) {
