@@ -26,7 +26,8 @@ public final class VillageDecorationData extends SavedData {
             new SavedDataType<>(
                     TemptingTrough.id("village_decorations"),
                     VillageDecorationData::new,
-                    CODEC
+                    CODEC,
+                    null
             );
 
     private final Set<Long> foodBowlResolved = new HashSet<>();

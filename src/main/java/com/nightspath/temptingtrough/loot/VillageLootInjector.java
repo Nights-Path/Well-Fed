@@ -9,7 +9,6 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 public final class VillageLootInjector {
     private static final float VILLAGE_BLOCK_LOOT_CHANCE = 0.01F;
@@ -43,7 +42,6 @@ public final class VillageLootInjector {
             }
 
             LootPool.Builder rareBlockPool = LootPool.lootPool()
-                    .setRolls(ConstantValue.exactly(1.0F))
                     .when(LootItemRandomChanceCondition.randomChance(VILLAGE_BLOCK_LOOT_CHANCE))
                     .add(LootItem.lootTableItem(ModBlocks.FEEDING_TROUGH).setWeight(1))
                     .add(LootItem.lootTableItem(ModBlocks.FOOD_BOWL).setWeight(1));

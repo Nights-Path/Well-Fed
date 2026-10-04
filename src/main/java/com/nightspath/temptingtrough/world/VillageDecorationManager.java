@@ -75,7 +75,7 @@ public final class VillageDecorationManager {
                 structures.wrapAsHolder(structure).is(StructureTags.VILLAGE);
 
         List<StructureStart> villages = level.structureManager()
-                .startsForStructure(chunkPos, isVillage);
+                .startsForStructure(chunkPos.x(), chunkPos.z(), isVillage);
 
         if (villages.isEmpty()) {
             return;
@@ -88,7 +88,7 @@ public final class VillageDecorationManager {
                 continue;
             }
 
-            long villageKey = village.getChunkPos().toLong();
+            long villageKey = village.getChunkPos().pack();
 
             processFoodBowl(level, chunk, village, villageKey, data);
             processFeedingTrough(level, chunk, village, villageKey, data);
@@ -124,7 +124,7 @@ public final class VillageDecorationManager {
 
         RandomSource random = randomFor(
                 level,
-                villageKey ^ chunk.getPos().toLong(),
+                villageKey ^ chunk.getPos().pack(),
                 FOOD_BOWL_POSITION_SALT
         );
         Util.shuffle(beds, random);
@@ -176,7 +176,7 @@ public final class VillageDecorationManager {
 
         RandomSource random = randomFor(
                 level,
-                villageKey ^ chunk.getPos().toLong(),
+                villageKey ^ chunk.getPos().pack(),
                 TROUGH_POSITION_SALT
         );
         Util.shuffle(smokers, random);
