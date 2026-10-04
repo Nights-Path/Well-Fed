@@ -5,7 +5,8 @@
     "particle": "tempting_trough:block/trough_wood",
     "wood": "tempting_trough:block/trough_wood",
     "inner": "tempting_trough:block/trough_inner",
-    "hay": "tempting_trough:block/trough_hay"
+    "hay_top": "tempting_trough:block/trough_hay",
+    "hay_end": "tempting_trough:block/trough_hay_end"
   },
   "elements": [
     {
@@ -245,22 +246,22 @@
       ],
       "faces": {
         "down": {
-          "texture": "#hay"
+          "texture": "#hay_end"
         },
         "up": {
-          "texture": "#hay"
+          "texture": "#hay_top"
         },
         "north": {
-          "texture": "#hay"
+          "texture": "#hay_end"
         },
         "south": {
-          "texture": "#hay"
+          "texture": "#hay_end"
         },
         "west": {
-          "texture": "#hay"
+          "texture": "#hay_end"
         },
         "east": {
-          "texture": "#hay"
+          "texture": "#hay_end"
         }
       }
     }
