@@ -21,19 +21,13 @@ The default `trough_foods` tag is intentionally crop/seed focused. Datapacks and
 
 ## Food Bowl
 
+- 27 inventory slots (3 rows of 9), matching the Feeding Trough.
 - One block serves both tamed cats and tamed wolves.
 - Does not tempt pets and never enables breeding.
 - Pets only eat when already inside a 5×5×5 interaction cube and are injured.
 - Cats consume only `minecraft:cat_food`; wolves consume only `minecraft:wolf_food`.
 - Healing uses the consumed item's vanilla food nutrition value.
 - Sitting pets remain sitting because the bowl never adds a movement goal.
-
-### Open design decision
-
-The Food Bowl inventory size has not been specified yet. It is isolated behind
-`FoodBowlBlockEntity.CONTAINER_SIZE` and is provisionally set to 9 slots so
-the first implementation can compile and be tested without baking the choice
-into the rest of the design.
 
 ## Development
 
