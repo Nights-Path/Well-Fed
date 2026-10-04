@@ -22,11 +22,11 @@ The default `trough_foods` tag is intentionally crop/seed focused. Datapacks and
 ### Crafting
 
 ```text
-HHH
+WWW
 SSS
 ```
 
-- `H`: Hay Bale
+- `W`: Wheat
 - `S`: Any wooden slab
 
 ## Food Bowl
