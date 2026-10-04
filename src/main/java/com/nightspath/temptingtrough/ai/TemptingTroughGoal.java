@@ -34,7 +34,7 @@ public final class TemptingTroughGoal extends Goal {
             return false;
         }
 
-        return animal.canFallInLove() || isNearInfluenceBoundary(this.trough.getBlockPos());
+        return isReadyForTroughBreeding() || isNearInfluenceBoundary(this.trough.getBlockPos());
     }
 
     @Override
@@ -46,7 +46,7 @@ public final class TemptingTroughGoal extends Goal {
             return false;
         }
 
-        return animal.canFallInLove() || !isInsideSafeCube(this.trough.getBlockPos());
+        return isReadyForTroughBreeding() || !isInsideSafeCube(this.trough.getBlockPos());
     }
 
     @Override
@@ -68,7 +68,7 @@ public final class TemptingTroughGoal extends Goal {
                 troughPos.getZ() + 0.5
         );
 
-        if (animal.canFallInLove() && isInsideInteractionCube(troughPos)) {
+        if (isReadyForTroughBreeding() && isInsideInteractionCube(troughPos)) {
             int foodSlot = this.trough.findFoodFor(this.animal);
             if (foodSlot >= 0) {
                 this.trough.consumeOne(foodSlot);
@@ -78,7 +78,7 @@ public final class TemptingTroughGoal extends Goal {
             return;
         }
 
-        if (animal.canFallInLove() || !isInsideSafeCube(troughPos)) {
+        if (isReadyForTroughBreeding() || !isInsideSafeCube(troughPos)) {
             this.animal.getNavigation().moveTo(
                     troughPos.getX() + 0.5,
                     troughPos.getY() + 0.5,
@@ -88,6 +88,14 @@ public final class TemptingTroughGoal extends Goal {
         } else {
             this.animal.getNavigation().stop();
         }
+    }
+
+    private boolean isReadyForTroughBreeding() {
+        // Vanilla parents receive a positive age after breeding (the breeding
+        // cooldown). Requiring age == 0 means the trough cannot immediately
+        // feed them again during that cooldown. Checking isInLove separately
+        // also guarantees one item is consumed per love-mode activation.
+        return this.animal.getAge() == 0 && !this.animal.isInLove();
     }
 
     private FeedingTroughBlockEntity findNearestMatchingTrough() {
