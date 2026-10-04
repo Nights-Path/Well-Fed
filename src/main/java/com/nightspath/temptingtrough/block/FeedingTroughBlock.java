@@ -1,6 +1,5 @@
 package com.nightspath.temptingtrough.block;
 
-import com.mojang.serialization.MapCodec;
 import com.nightspath.temptingtrough.block.entity.FeedingTroughBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -18,11 +17,6 @@ import org.jspecify.annotations.Nullable;
 public final class FeedingTroughBlock extends BaseEntityBlock {
     public FeedingTroughBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return simpleCodec(FeedingTroughBlock::new);
     }
 
     @Override
