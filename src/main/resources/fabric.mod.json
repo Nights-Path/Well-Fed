@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "tempting_trough",
   "version": "${version}",
-  "name": "Tempting Trough",
+  "name": "Well Fed",
   "description": "Feeding troughs that keep matching animals nearby and food bowls that heal tamed cats and wolves.",
   "authors": [
     "Nights-Path"
@@ -25,5 +25,6 @@
     "minecraft": "~26.3",
     "java": ">=25",
     "fabric-api": "*"
-  }
+  },
+  "icon": "assets/tempting_trough/icon.png"
 }

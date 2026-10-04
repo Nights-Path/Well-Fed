@@ -1,4 +1,4 @@
-# Tempting Trough
+# Well Fed
 
 A Fabric mod for Minecraft 26.3 that adds a Feeding Trough for livestock-style animals and a Food Bowl for tamed cats and wolves.
 
