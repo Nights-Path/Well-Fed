@@ -1,7 +1,12 @@
 {
   "variants": {
-    "": {
-      "model": "tempting_trough:block/feeding_trough"
-    }
+    "facing=north,filled=false": { "model": "tempting_trough:block/feeding_trough_empty" },
+    "facing=east,filled=false":  { "model": "tempting_trough:block/feeding_trough_empty", "y": 90 },
+    "facing=south,filled=false": { "model": "tempting_trough:block/feeding_trough_empty", "y": 180 },
+    "facing=west,filled=false":  { "model": "tempting_trough:block/feeding_trough_empty", "y": 270 },
+    "facing=north,filled=true":  { "model": "tempting_trough:block/feeding_trough_filled" },
+    "facing=east,filled=true":   { "model": "tempting_trough:block/feeding_trough_filled", "y": 90 },
+    "facing=south,filled=true":  { "model": "tempting_trough:block/feeding_trough_filled", "y": 180 },
+    "facing=west,filled=true":   { "model": "tempting_trough:block/feeding_trough_filled", "y": 270 }
   }
 }

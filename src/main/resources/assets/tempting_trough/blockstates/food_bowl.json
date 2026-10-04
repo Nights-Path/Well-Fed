@@ -1,7 +1,6 @@
 {
   "variants": {
-    "": {
-      "model": "tempting_trough:block/food_bowl"
-    }
+    "filled=false": { "model": "tempting_trough:block/food_bowl_empty" },
+    "filled=true":  { "model": "tempting_trough:block/food_bowl_filled" }
   }
 }

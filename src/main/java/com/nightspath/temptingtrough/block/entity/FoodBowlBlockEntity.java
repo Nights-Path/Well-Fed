@@ -1,5 +1,6 @@
 package com.nightspath.temptingtrough.block.entity;
 
+import com.nightspath.temptingtrough.block.FoodBowlBlock;
 import com.nightspath.temptingtrough.menu.FilteredChestMenu;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -33,6 +34,26 @@ public final class FoodBowlBlockEntity extends FilteredContainerBlockEntity impl
     @Override
     protected boolean isItemAllowed(ItemStack stack) {
         return stack.is(ItemTags.CAT_FOOD) || stack.is(ItemTags.WOLF_FOOD);
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        syncFilledState();
+    }
+
+    private void syncFilledState() {
+        Level level = this.getLevel();
+        if (level == null || level.isClientSide()) {
+            return;
+        }
+
+        BlockState state = this.getBlockState();
+        boolean filled = !this.isEmpty();
+        if (state.hasProperty(FoodBowlBlock.FILLED)
+                && state.getValue(FoodBowlBlock.FILLED) != filled) {
+            level.setBlockAndUpdate(this.getBlockPos(), state.setValue(FoodBowlBlock.FILLED, filled));
+        }
     }
 
     @Override

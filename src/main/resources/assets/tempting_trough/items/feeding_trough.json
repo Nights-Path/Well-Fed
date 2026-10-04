@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "tempting_trough:block/feeding_trough"
+    "model": "tempting_trough:block/feeding_trough_empty"
   }
 }
