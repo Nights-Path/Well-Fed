@@ -15,6 +15,9 @@
   "entrypoints": {
     "main": [
       "com.nightspath.temptingtrough.TemptingTrough"
+    ],
+    "client": [
+      "com.nightspath.temptingtrough.client.TemptingTroughClient"
     ]
   },
   "depends": {

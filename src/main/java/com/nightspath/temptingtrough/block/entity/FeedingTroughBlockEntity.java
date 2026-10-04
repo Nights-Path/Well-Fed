@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 public final class FeedingTroughBlockEntity extends FilteredContainerBlockEntity implements MenuProvider {
-    public static final int CONTAINER_SIZE = 27;
+    public static final int CONTAINER_SIZE = 9;
     public static final int INFLUENCE_RADIUS = 4;
     public static final int INTERACTION_RADIUS = 2;
 

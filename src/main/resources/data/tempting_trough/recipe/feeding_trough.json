@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "H": "minecraft:hay_block",
+    "S": "#minecraft:wooden_slabs"
+  },
+  "pattern": [
+    "HHH",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tempting_trough:feeding_trough"
+  }
+}

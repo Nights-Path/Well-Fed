@@ -1,7 +1,7 @@
 package com.nightspath.temptingtrough.block.entity;
 
 import com.nightspath.temptingtrough.block.FoodBowlBlock;
-import com.nightspath.temptingtrough.menu.FilteredChestMenu;
+import com.nightspath.temptingtrough.menu.FoodBowlMenu;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -23,7 +23,7 @@ import net.minecraft.world.phys.AABB;
 import org.jspecify.annotations.Nullable;
 
 public final class FoodBowlBlockEntity extends FilteredContainerBlockEntity implements MenuProvider {
-    public static final int CONTAINER_SIZE = 27;
+    public static final int CONTAINER_SIZE = 3;
     public static final int INTERACTION_RADIUS = 2;
     private static final int CHECK_INTERVAL_TICKS = 20;
 
@@ -63,7 +63,7 @@ public final class FoodBowlBlockEntity extends FilteredContainerBlockEntity impl
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new FilteredChestMenu(containerId, inventory, this);
+        return new FoodBowlMenu(containerId, inventory, this);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, FoodBowlBlockEntity bowl) {

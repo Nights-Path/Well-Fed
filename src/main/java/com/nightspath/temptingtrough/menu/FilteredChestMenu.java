@@ -9,36 +9,31 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public final class FilteredChestMenu extends AbstractContainerMenu {
-    private static final int ROWS = 3;
-    private static final int COLUMNS = 9;
-    private static final int CONTAINER_SLOTS = ROWS * COLUMNS;
-
+    private static final int CONTAINER_SLOTS = 9;
     private final Container container;
 
     public FilteredChestMenu(int containerId, Inventory inventory, Container container) {
-        super(MenuType.GENERIC_9x3, containerId);
+        super(MenuType.GENERIC_9x1, containerId);
         checkContainerSize(container, CONTAINER_SLOTS);
         this.container = container;
         container.startOpen(inventory.player);
 
-        for (int y = 0; y < ROWS; y++) {
-            for (int x = 0; x < COLUMNS; x++) {
-                int containerSlot = x + y * COLUMNS;
-                this.addSlot(new Slot(
-                        container,
-                        containerSlot,
-                        8 + x * SLOT_SIZE,
-                        18 + y * SLOT_SIZE
-                ) {
-                    @Override
-                    public boolean mayPlace(ItemStack stack) {
-                        return container.canPlaceItem(containerSlot, stack);
-                    }
-                });
-            }
+        for (int x = 0; x < CONTAINER_SLOTS; x++) {
+            int containerSlot = x;
+            this.addSlot(new Slot(
+                    container,
+                    containerSlot,
+                    8 + x * SLOT_SIZE,
+                    18
+            ) {
+                @Override
+                public boolean mayPlace(ItemStack stack) {
+                    return container.canPlaceItem(containerSlot, stack);
+                }
+            });
         }
 
-        int inventoryTop = 18 + ROWS * SLOT_SIZE + 13;
+        int inventoryTop = 18 + SLOT_SIZE + 13;
         this.addStandardInventorySlots(inventory, 8, inventoryTop);
     }
 

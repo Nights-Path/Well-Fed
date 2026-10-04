@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "F": "#tempting_trough:food_bowl_crafting_food",
+    "S": "#minecraft:wooden_slabs"
+  },
+  "pattern": [
+    " F ",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tempting_trough:food_bowl"
+  }
+}
