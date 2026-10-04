@@ -2,53 +2,52 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": true,
   "textures": {
-    "particle": "tempting_trough:block/trough_wood",
-    "wood": "tempting_trough:block/trough_wood",
-    "inner": "tempting_trough:block/trough_inner",
-    "hay_top": "tempting_trough:block/trough_hay",
-    "hay_end": "tempting_trough:block/trough_hay_end"
+    "particle": "well_fed:block/bowl_wood",
+    "wood": "well_fed:block/bowl_wood",
+    "inner": "well_fed:block/bowl_inner",
+    "kibble": "well_fed:block/bowl_kibble"
   },
   "elements": [
     {
       "from": [
-        1,
+        2,
         0,
-        0
+        2
+      ],
+      "to": [
+        14,
+        2,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#wood"
+        },
+        "up": {
+          "texture": "#inner"
+        },
+        "north": {
+          "texture": "#wood"
+        },
+        "south": {
+          "texture": "#wood"
+        },
+        "west": {
+          "texture": "#wood"
+        },
+        "east": {
+          "texture": "#wood"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        2,
+        1
       ],
       "to": [
         15,
-        2,
-        16
-      ],
-      "faces": {
-        "down": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#inner"
-        },
-        "north": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "from": [
-        2,
-        2,
-        0
-      ],
-      "to": [
-        14,
         8,
         2
       ],
@@ -75,14 +74,14 @@
     },
     {
       "from": [
-        2,
+        1,
         2,
         14
       ],
       "to": [
-        14,
+        15,
         8,
-        16
+        15
       ],
       "faces": {
         "down": {
@@ -107,46 +106,14 @@
     },
     {
       "from": [
-        0,
-        0,
-        0
-      ],
-      "to": [
+        1,
         2,
-        11,
         2
       ],
-      "faces": {
-        "down": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "north": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "from": [
-        0,
-        0,
-        14
-      ],
       "to": [
         2,
-        11,
-        16
+        8,
+        14
       ],
       "faces": {
         "down": {
@@ -165,53 +132,21 @@
           "texture": "#wood"
         },
         "east": {
-          "texture": "#wood"
+          "texture": "#inner"
         }
       }
     },
     {
       "from": [
         14,
-        0,
-        0
-      ],
-      "to": [
-        16,
-        11,
+        2,
         2
       ],
-      "faces": {
-        "down": {
-          "texture": "#wood"
-        },
-        "up": {
-          "texture": "#wood"
-        },
-        "north": {
-          "texture": "#wood"
-        },
-        "south": {
-          "texture": "#wood"
-        },
-        "west": {
-          "texture": "#wood"
-        },
-        "east": {
-          "texture": "#wood"
-        }
-      }
-    },
-    {
-      "from": [
-        14,
-        0,
+      "to": [
+        15,
+        8,
         14
       ],
-      "to": [
-        16,
-        11,
-        16
-      ],
       "faces": {
         "down": {
           "texture": "#wood"
@@ -226,7 +161,7 @@
           "texture": "#wood"
         },
         "west": {
-          "texture": "#wood"
+          "texture": "#inner"
         },
         "east": {
           "texture": "#wood"
@@ -241,27 +176,27 @@
       ],
       "to": [
         14,
-        7,
+        6,
         14
       ],
       "faces": {
         "down": {
-          "texture": "#hay_end"
+          "texture": "#kibble"
         },
         "up": {
-          "texture": "#hay_top"
+          "texture": "#kibble"
         },
         "north": {
-          "texture": "#hay_end"
+          "texture": "#kibble"
         },
         "south": {
-          "texture": "#hay_end"
+          "texture": "#kibble"
         },
         "west": {
-          "texture": "#hay_end"
+          "texture": "#kibble"
         },
         "east": {
-          "texture": "#hay_end"
+          "texture": "#kibble"
         }
       }
     }

@@ -2,10 +2,11 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": true,
   "textures": {
-    "particle": "tempting_trough:block/trough_wood",
-    "wood": "tempting_trough:block/trough_wood",
-    "inner": "tempting_trough:block/trough_inner",
-    "hay": "tempting_trough:block/trough_hay"
+    "particle": "well_fed:block/trough_wood",
+    "wood": "well_fed:block/trough_wood",
+    "inner": "well_fed:block/trough_inner",
+    "hay_top": "well_fed:block/trough_hay",
+    "hay_end": "well_fed:block/trough_hay_end"
   },
   "elements": [
     {
@@ -229,6 +230,38 @@
         },
         "east": {
           "texture": "#wood"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2,
+        2
+      ],
+      "to": [
+        14,
+        7,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#hay_end"
+        },
+        "up": {
+          "texture": "#hay_top"
+        },
+        "north": {
+          "texture": "#hay_end"
+        },
+        "south": {
+          "texture": "#hay_end"
+        },
+        "west": {
+          "texture": "#hay_end"
+        },
+        "east": {
+          "texture": "#hay_end"
         }
       }
     }

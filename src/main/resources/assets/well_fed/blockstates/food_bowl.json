@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "filled=false": { "model": "well_fed:block/food_bowl_empty" },
+    "filled=true":  { "model": "well_fed:block/food_bowl_filled" }
+  }
+}

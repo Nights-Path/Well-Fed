@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "well_fed:block/food_bowl_empty"
+  }
+}

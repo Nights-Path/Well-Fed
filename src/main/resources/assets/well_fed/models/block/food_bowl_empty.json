@@ -2,10 +2,10 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": true,
   "textures": {
-    "particle": "tempting_trough:block/bowl_wood",
-    "wood": "tempting_trough:block/bowl_wood",
-    "inner": "tempting_trough:block/bowl_inner",
-    "kibble": "tempting_trough:block/bowl_kibble"
+    "particle": "well_fed:block/bowl_wood",
+    "wood": "well_fed:block/bowl_wood",
+    "inner": "well_fed:block/bowl_inner",
+    "kibble": "well_fed:block/bowl_kibble"
   },
   "elements": [
     {
