@@ -1,5 +1,6 @@
 package com.nightspath.temptingtrough.block.entity;
 
+import com.nightspath.temptingtrough.menu.FilteredChestMenu;
 import com.nightspath.temptingtrough.tag.ModItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -8,7 +9,6 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
@@ -48,6 +48,6 @@ public final class FeedingTroughBlockEntity extends FilteredContainerBlockEntity
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return ChestMenu.threeRows(containerId, inventory, this);
+        return new FilteredChestMenu(containerId, inventory, this);
     }
 }
