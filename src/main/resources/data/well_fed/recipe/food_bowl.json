@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "F": "#tempting_trough:food_bowl_crafting_food",
+    "F": "#well_fed:food_bowl_crafting_food",
     "S": "#minecraft:wooden_slabs"
   },
   "pattern": [
@@ -10,6 +10,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "tempting_trough:food_bowl"
+    "id": "well_fed:food_bowl"
   }
 }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "tempting_trough:feeding_trough"
+          "name": "well_fed:food_bowl"
         }
       ],
       "conditions": [
@@ -16,5 +16,5 @@
       ]
     }
   ],
-  "random_sequence": "tempting_trough:blocks/feeding_trough"
+  "random_sequence": "well_fed:blocks/food_bowl"
 }
