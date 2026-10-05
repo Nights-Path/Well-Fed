@@ -9,11 +9,13 @@ A Fabric mod for Minecraft 26.3 that adds a Feeding Trough for livestock-style a
 - Hoppers and Fabric Transfer API-compatible pipes can insert/extract.
 - An animal is only affected when the trough contains an item that the animal itself considers food.
 - Tamed animals are excluded from trough behavior.
-- Influence area: 9×9×9 cube centered on the trough (4 blocks in each direction).
-- Eating area: 5×5×5 cube centered on the trough (2 blocks in each direction).
+- Default influence area: 9×9×9 cube centered on the trough (configurable from 5×5×5 through 17×17×17).
+- Default eating area: 5×5×5 cube centered on the trough (configurable, and never larger than the influence area).
 - Animals near the edge of the influence area are biased back toward the trough.
 - Breed-ready adults move toward the trough, consume one matching item once inside the eating area, and enter vanilla love mode.
-- There is no population cap and no extra breeding cooldown beyond vanilla rules.
+- Automatic trough breeding pauses at configurable nearby population limits (default: 5 babies or 10 adults).
+- Population limits can count all nearby livestock together or only animals of the same species.
+- Vanilla breeding cooldown still applies.
 - The trough goal has lower priority than ordinary player temptation/breeding behavior, so animals can still be deliberately lured out.
 - Inactive troughs do nothing to an animal when they contain no matching food.
 - Villages have a deterministic 25% chance to receive one trough. Butcher/smoker placement is preferred when available; otherwise the trough falls back to a safe general-village location near a bed.
@@ -58,6 +60,16 @@ SSS
   - raw mutton
   - raw rabbit
   - rotten flesh
+
+## Configuration
+
+Well Fed creates `config/well-fed.json` and does not require a config library.
+
+When Mod Menu is installed, its **Configure** button opens a Well Fed settings screen. Mod Menu is optional; dedicated servers can edit the JSON file directly.
+
+Configurable gameplay values include trough attraction/eating ranges, baby/adult breeding limits, population counting mode, automatic trough breeding, Food Bowl healing range, village decoration chances, and village chest loot.
+
+On a remote multiplayer server, the server's configuration is authoritative.
 
 ## Village chest loot
 

@@ -4,6 +4,7 @@ import com.nightspath.wellfed.WellFed;
 import com.nightspath.wellfed.block.FeedingTroughBlock;
 import com.nightspath.wellfed.block.ModBlocks;
 import com.nightspath.wellfed.block.entity.FoodBowlBlockEntity;
+import com.nightspath.wellfed.config.WellFedConfig;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -33,12 +34,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 public final class VillageDecorationManager {
-    private static final float FOOD_BOWL_VILLAGE_CHANCE = 0.40F;
-    private static final float FEEDING_TROUGH_VILLAGE_CHANCE = 0.25F;
-
     private static final int DECORATION_DELAY_TICKS = 2;
-    private static final boolean WORLDGEN_DIAGNOSTICS = true;
-
     private static final long FOOD_BOWL_CHANCE_SALT = 0x4A6F7920426F776CL;
     private static final long FOOD_BOWL_POSITION_SALT = 0x426F776C506F734CL;
     private static final long FOOD_BOWL_LOOT_SALT = 0x426F776C4C6F6F74L;
@@ -72,6 +68,10 @@ public final class VillageDecorationManager {
     }
 
     private static void queueChunk(ServerLevel level, ChunkPos chunkPos) {
+        if (!WellFedConfig.get().villageDecorationsEnabled()) {
+            return;
+        }
+
         PENDING_CHUNKS
                 .computeIfAbsent(level, ignored -> new LinkedHashMap<>())
                 .putIfAbsent(chunkPos, DECORATION_DELAY_TICKS);
@@ -128,6 +128,10 @@ public final class VillageDecorationManager {
     }
 
     private static void decorateLoadedChunk(ServerLevel level, ChunkPos chunkPos) {
+        if (!WellFedConfig.get().villageDecorationsEnabled()) {
+            return;
+        }
+
         LevelChunk triggerChunk = level.getChunkSource().getChunkNow(chunkPos.x(), chunkPos.z());
         if (triggerChunk == null) {
             return;
@@ -203,11 +207,13 @@ public final class VillageDecorationManager {
             return;
         }
 
-        if (!rollChance(level, villageKey, FOOD_BOWL_CHANCE_SALT, FOOD_BOWL_VILLAGE_CHANCE)) {
+        float foodBowlChance = WellFedConfig.get().foodBowlVillageChancePercent() / 100.0F;
+        if (!rollChance(level, villageKey, FOOD_BOWL_CHANCE_SALT, foodBowlChance)) {
             data.resolveFoodBowl(villageKey);
             diagnostics(
-                    "Village {} did not roll a Food Bowl (40% chance).",
-                    village.getChunkPos()
+                    "Village {} did not roll a Food Bowl ({}% chance).",
+                    village.getChunkPos(),
+                    WellFedConfig.get().foodBowlVillageChancePercent()
             );
             return;
         }
@@ -281,12 +287,13 @@ public final class VillageDecorationManager {
                 level,
                 villageKey,
                 TROUGH_CHANCE_SALT,
-                FEEDING_TROUGH_VILLAGE_CHANCE
+                WellFedConfig.get().feedingTroughVillageChancePercent() / 100.0F
         )) {
             data.resolveFeedingTrough(villageKey);
             diagnostics(
-                    "Village {} did not roll a Feeding Trough (25% chance).",
-                    village.getChunkPos()
+                    "Village {} did not roll a Feeding Trough ({}% chance).",
+                    village.getChunkPos(),
+                    WellFedConfig.get().feedingTroughVillageChancePercent()
             );
             return;
         }
@@ -585,7 +592,7 @@ public final class VillageDecorationManager {
     }
 
     private static void diagnostics(String message, Object... args) {
-        if (WORLDGEN_DIAGNOSTICS) {
+        if (WellFedConfig.get().worldgenDiagnostics()) {
             WellFed.LOGGER.info("[VillageGen] " + message, args);
         }
     }
