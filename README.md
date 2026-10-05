@@ -9,14 +9,16 @@ A Fabric mod for Minecraft 26.3 that adds a Feeding Trough for livestock-style a
 - Hoppers and Fabric Transfer API-compatible pipes can insert/extract.
 - An animal is only affected when the trough contains an item that the animal itself considers food.
 - Tamed animals are excluded from trough behavior.
-- Influence area: 9×9×9 cube centered on the trough (4 blocks in each direction).
-- Eating area: 5×5×5 cube centered on the trough (2 blocks in each direction).
+- Default influence area: 9×9×9 cube centered on the trough (configurable from 5×5×5 through 17×17×17).
+- Default eating area: 5×5×5 cube centered on the trough (configurable, and never larger than the influence area).
 - Animals near the edge of the influence area are biased back toward the trough.
 - Breed-ready adults move toward the trough, consume one matching item once inside the eating area, and enter vanilla love mode.
-- There is no population cap and no extra breeding cooldown beyond vanilla rules.
+- Automatic trough breeding pauses at configurable nearby population limits (default: 5 babies or 10 adults).
+- Population limits can count all nearby livestock together or only animals of the same species.
+- Vanilla breeding cooldown still applies.
 - The trough goal has lower priority than ordinary player temptation/breeding behavior, so animals can still be deliberately lured out.
 - Inactive troughs do nothing to an animal when they contain no matching food.
-- During new village generation, butcher-containing villages have a 75% deterministic chance to receive one trough near a smoker. This is intended to produce an overall frequency near one trough every 3–5 villages, depending on how often a village generates a butcher building.
+- Villages have a deterministic 25% chance to receive one trough. Butcher/smoker placement is preferred when available; otherwise the trough falls back to a safe general-village location near a bed.
 
 The default `trough_foods` tag is intentionally crop/seed focused. Datapacks and mods can extend the tag.
 
@@ -59,6 +61,16 @@ SSS
   - raw rabbit
   - rotten flesh
 
+## Configuration
+
+Well Fed creates `config/well-fed.json` and does not require a config library.
+
+When Mod Menu is installed, its **Configure** button opens a Well Fed settings screen. Mod Menu is optional; dedicated servers can edit the JSON file directly.
+
+Configurable gameplay values include trough attraction/eating ranges, baby/adult breeding limits, population counting mode, automatic trough breeding, Food Bowl healing range, village decoration chances, and village chest loot.
+
+On a remote multiplayer server, the server's configuration is authoritative.
+
 ## Village chest loot
 
 All vanilla village chest loot tables receive one additional independent loot pool:
@@ -70,14 +82,14 @@ All vanilla village chest loot tables receive one additional independent loot po
 
 ## World generation behavior
 
-Village decorations are applied after a newly generated village chunk is loaded into the server:
+Village decorations are evaluated shortly after village chunks load into the server:
 
 - Placement is deterministic from the world seed and village start, so chunk reloads cannot reroll placement.
 - A persistent per-dimension record prevents duplicate decoration if additional chunks of the same village generate later.
 - Food Bowls search for a safe floor location near a village bed.
-- Feeding Troughs search for a safe location near a smoker inside a village structure.
+- Feeding Troughs prefer a safe location near a butcher smoker, then fall back to a safe location near a village bed.
 - Paths and farmland are not overwritten.
-- Existing already-generated villages are not retroactively decorated; the feature applies as new village chunks generate.
+- Existing villages can be decorated when their chunks are loaded if that village has not already had its Well Fed decoration decision resolved.
 
 ## Development
 

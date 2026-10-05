@@ -1,20 +1,25 @@
 package com.nightspath.wellfed.ai;
 
 import com.nightspath.wellfed.block.entity.FeedingTroughBlockEntity;
+import com.nightspath.wellfed.config.WellFedConfig;
 import java.util.EnumSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 
 public final class FeedingTroughGoal extends Goal {
     private static final double MOVE_SPEED = 1.0;
     private static final int SAFE_RADIUS = 2;
     private static final int SEARCH_INTERVAL_TICKS = 20;
+    private static final int POPULATION_RECHECK_TICKS = 20;
 
     private final Animal animal;
     private FeedingTroughBlockEntity trough;
     private int searchCooldown;
+    private int populationRetryCooldown;
 
     public FeedingTroughGoal(Animal animal) {
         this.animal = animal;
@@ -34,7 +39,8 @@ public final class FeedingTroughGoal extends Goal {
             return false;
         }
 
-        return isReadyForTroughBreeding() || isNearInfluenceBoundary(this.trough.getBlockPos());
+        return (WellFedConfig.get().automaticTroughBreeding() && isReadyForTroughBreeding())
+                || isNearInfluenceBoundary(this.trough.getBlockPos());
     }
 
     @Override
@@ -46,7 +52,8 @@ public final class FeedingTroughGoal extends Goal {
             return false;
         }
 
-        return isReadyForTroughBreeding() || !isInsideSafeCube(this.trough.getBlockPos());
+        return (WellFedConfig.get().automaticTroughBreeding() && isReadyForTroughBreeding())
+                || !isInsideSafeCube(this.trough.getBlockPos());
     }
 
     @Override
@@ -68,7 +75,26 @@ public final class FeedingTroughGoal extends Goal {
                 troughPos.getZ() + 0.5
         );
 
-        if (isReadyForTroughBreeding() && isInsideInteractionCube(troughPos)) {
+        if (WellFedConfig.get().automaticTroughBreeding()
+                && isReadyForTroughBreeding()
+                && isInsideInteractionCube(troughPos)) {
+            if (this.populationRetryCooldown > 0) {
+                this.populationRetryCooldown--;
+                this.animal.getNavigation().stop();
+                return;
+            }
+
+            WellFedConfig config = WellFedConfig.get();
+            PopulationCounts population = countNearbyPopulation(troughPos, config);
+            if (population.babies() >= config.maxNearbyBabies()
+                    || population.adults() >= config.maxNearbyAdults()) {
+                // Keep the animal near the trough, but do not consume food or
+                // start love mode while the local population is at either cap.
+                this.populationRetryCooldown = POPULATION_RECHECK_TICKS;
+                this.animal.getNavigation().stop();
+                return;
+            }
+
             int foodSlot = this.trough.findFoodFor(this.animal);
             if (foodSlot >= 0) {
                 this.trough.consumeOne(foodSlot);
@@ -78,7 +104,8 @@ public final class FeedingTroughGoal extends Goal {
             return;
         }
 
-        if (isReadyForTroughBreeding() || !isInsideSafeCube(troughPos)) {
+        if ((WellFedConfig.get().automaticTroughBreeding() && isReadyForTroughBreeding())
+                || !isInsideSafeCube(troughPos)) {
             this.animal.getNavigation().moveTo(
                     troughPos.getX() + 0.5,
                     troughPos.getY() + 0.5,
@@ -98,21 +125,61 @@ public final class FeedingTroughGoal extends Goal {
         return this.animal.getAge() == 0 && !this.animal.isInLove();
     }
 
+    private PopulationCounts countNearbyPopulation(
+            BlockPos troughPos,
+            WellFedConfig config
+    ) {
+        int radius = config.troughInfluenceRadius();
+        AABB area = new AABB(troughPos).inflate(radius);
+
+        int babies = 0;
+        int adults = 0;
+
+        for (Animal nearby : this.animal.level().getEntitiesOfClass(Animal.class, area)) {
+            // Tamed animals are handled by the Food Bowl and should not affect
+            // livestock population limits for the Feeding Trough.
+            if (nearby instanceof TamableAnimal) {
+                continue;
+            }
+
+            if (config.populationCountingMode()
+                            == WellFedConfig.PopulationCountingMode.SAME_SPECIES_ONLY
+                    && nearby.getType() != this.animal.getType()) {
+                continue;
+            }
+
+            if (nearby.isBaby()) {
+                babies++;
+                if (babies >= config.maxNearbyBabies()) {
+                    break;
+                }
+            } else {
+                adults++;
+                if (adults >= config.maxNearbyAdults()) {
+                    break;
+                }
+            }
+        }
+
+        return new PopulationCounts(babies, adults);
+    }
+
     private FeedingTroughBlockEntity findNearestMatchingTrough() {
         Level level = this.animal.level();
         BlockPos origin = this.animal.blockPosition();
         FeedingTroughBlockEntity nearest = null;
         double nearestDistance = Double.MAX_VALUE;
 
+        int influenceRadius = WellFedConfig.get().troughInfluenceRadius();
         BlockPos min = origin.offset(
-                -FeedingTroughBlockEntity.INFLUENCE_RADIUS,
-                -FeedingTroughBlockEntity.INFLUENCE_RADIUS,
-                -FeedingTroughBlockEntity.INFLUENCE_RADIUS
+                -influenceRadius,
+                -influenceRadius,
+                -influenceRadius
         );
         BlockPos max = origin.offset(
-                FeedingTroughBlockEntity.INFLUENCE_RADIUS,
-                FeedingTroughBlockEntity.INFLUENCE_RADIUS,
-                FeedingTroughBlockEntity.INFLUENCE_RADIUS
+                influenceRadius,
+                influenceRadius,
+                influenceRadius
         );
 
         for (BlockPos candidatePos : BlockPos.betweenClosed(min, max)) {
@@ -135,21 +202,25 @@ public final class FeedingTroughGoal extends Goal {
 
     private boolean isNearInfluenceBoundary(BlockPos troughPos) {
         BlockPos animalPos = animal.blockPosition();
-        return Math.abs(animalPos.getX() - troughPos.getX()) >= FeedingTroughBlockEntity.INFLUENCE_RADIUS - 1
-                || Math.abs(animalPos.getY() - troughPos.getY()) >= FeedingTroughBlockEntity.INFLUENCE_RADIUS - 1
-                || Math.abs(animalPos.getZ() - troughPos.getZ()) >= FeedingTroughBlockEntity.INFLUENCE_RADIUS - 1;
+        int radius = WellFedConfig.get().troughInfluenceRadius();
+        return Math.abs(animalPos.getX() - troughPos.getX()) >= radius - 1
+                || Math.abs(animalPos.getY() - troughPos.getY()) >= radius - 1
+                || Math.abs(animalPos.getZ() - troughPos.getZ()) >= radius - 1;
     }
 
     private boolean isInsideInfluenceCube(BlockPos troughPos) {
-        return isInsideCube(troughPos, FeedingTroughBlockEntity.INFLUENCE_RADIUS);
+        return isInsideCube(troughPos, WellFedConfig.get().troughInfluenceRadius());
     }
 
     private boolean isInsideInteractionCube(BlockPos troughPos) {
-        return isInsideCube(troughPos, FeedingTroughBlockEntity.INTERACTION_RADIUS);
+        return isInsideCube(troughPos, WellFedConfig.get().troughInteractionRadius());
     }
 
     private boolean isInsideSafeCube(BlockPos troughPos) {
-        return isInsideCube(troughPos, SAFE_RADIUS);
+        return isInsideCube(
+                troughPos,
+                Math.min(SAFE_RADIUS, WellFedConfig.get().troughInfluenceRadius())
+        );
     }
 
     private boolean isInsideCube(BlockPos center, int radius) {
@@ -158,4 +229,7 @@ public final class FeedingTroughGoal extends Goal {
                 && Math.abs(animalPos.getY() - center.getY()) <= radius
                 && Math.abs(animalPos.getZ() - center.getZ()) <= radius;
     }
+    private record PopulationCounts(int babies, int adults) {
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.nightspath.wellfed.block.entity;
 
 import com.nightspath.wellfed.block.FoodBowlBlock;
+import com.nightspath.wellfed.config.WellFedConfig;
 import com.nightspath.wellfed.menu.FoodBowlMenu;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -24,7 +25,6 @@ import org.jspecify.annotations.Nullable;
 
 public final class FoodBowlBlockEntity extends FilteredContainerBlockEntity implements MenuProvider {
     public static final int CONTAINER_SIZE = 3;
-    public static final int INTERACTION_RADIUS = 2;
     private static final int CHECK_INTERVAL_TICKS = 20;
 
     public FoodBowlBlockEntity(BlockPos pos, BlockState state) {
@@ -71,13 +71,14 @@ public final class FoodBowlBlockEntity extends FilteredContainerBlockEntity impl
             return;
         }
 
+        int interactionRadius = WellFedConfig.get().foodBowlHealingRadius();
         AABB searchBox = new AABB(
-                pos.getX() - INTERACTION_RADIUS,
-                pos.getY() - INTERACTION_RADIUS,
-                pos.getZ() - INTERACTION_RADIUS,
-                pos.getX() + INTERACTION_RADIUS + 1,
-                pos.getY() + INTERACTION_RADIUS + 1,
-                pos.getZ() + INTERACTION_RADIUS + 1
+                pos.getX() - interactionRadius,
+                pos.getY() - interactionRadius,
+                pos.getZ() - interactionRadius,
+                pos.getX() + interactionRadius + 1,
+                pos.getY() + interactionRadius + 1,
+                pos.getZ() + interactionRadius + 1
         );
 
         List<TamableAnimal> pets = serverLevel.getEntitiesOfClass(

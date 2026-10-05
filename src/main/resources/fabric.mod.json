@@ -15,6 +15,9 @@
     ],
     "client": [
       "com.nightspath.wellfed.client.WellFedClient"
+    ],
+    "modmenu": [
+      "com.nightspath.wellfed.client.config.WellFedModMenu"
     ]
   },
   "depends": {
@@ -23,5 +26,8 @@
     "java": ">=25",
     "fabric-api": "*"
   },
-  "icon": "assets/well_fed/icon.png"
+  "icon": "assets/well_fed/icon.png",
+  "suggests": {
+    "modmenu": "*"
+  }
 }

@@ -1,4 +1,20 @@
 {
   "block.well_fed.feeding_trough": "Feeding Trough",
-  "block.well_fed.food_bowl": "Food Bowl"
+  "block.well_fed.food_bowl": "Food Bowl",
+  "well_fed.config.title": "Well Fed Configuration",
+  "well_fed.config.trough_influence": "Trough range: %s (%sx%sx%s)",
+  "well_fed.config.trough_interaction": "Eating range: %s (%sx%sx%s)",
+  "well_fed.config.max_babies": "Baby limit: %s",
+  "well_fed.config.max_adults": "Adult limit: %s",
+  "well_fed.config.population_mode": "Population: %s",
+  "well_fed.config.population_mode.all": "All livestock",
+  "well_fed.config.population_mode.same_species": "Same species",
+  "well_fed.config.auto_breeding": "Auto breeding: %s",
+  "well_fed.config.bowl_radius": "Bowl range: %s (%sx%sx%s)",
+  "well_fed.config.village_decorations": "Village decoration: %s",
+  "well_fed.config.bowl_village_chance": "Bowl village chance: %s%%",
+  "well_fed.config.trough_village_chance": "Trough village chance: %s%%",
+  "well_fed.config.village_chest_loot": "Village chest loot: %s",
+  "well_fed.config.chest_loot_chance": "Chest loot chance: %s%%",
+  "well_fed.config.remote_notice": "Remote server config is authoritative"
 }

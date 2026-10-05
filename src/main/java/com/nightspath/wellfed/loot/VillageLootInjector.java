@@ -1,6 +1,7 @@
 package com.nightspath.wellfed.loot;
 
 import com.nightspath.wellfed.block.ModBlocks;
+import com.nightspath.wellfed.config.WellFedConfig;
 import java.util.Set;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.resources.ResourceKey;
@@ -11,8 +12,6 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 
 public final class VillageLootInjector {
-    private static final float VILLAGE_BLOCK_LOOT_CHANCE = 0.01F;
-
     private static final Set<ResourceKey<LootTable>> VILLAGE_CHEST_TABLES = Set.of(
             BuiltInLootTables.VILLAGE_WEAPONSMITH,
             BuiltInLootTables.VILLAGE_TOOLSMITH,
@@ -37,12 +36,16 @@ public final class VillageLootInjector {
 
     public static void initialize() {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            if (!source.isBuiltin() || !VILLAGE_CHEST_TABLES.contains(key)) {
+            if (!source.isBuiltin()
+                    || !VILLAGE_CHEST_TABLES.contains(key)
+                    || !WellFedConfig.get().villageChestLootEnabled()) {
                 return;
             }
 
             LootPool.Builder rareBlockPool = LootPool.lootPool()
-                    .when(LootItemRandomChanceCondition.randomChance(VILLAGE_BLOCK_LOOT_CHANCE))
+                    .when(LootItemRandomChanceCondition.randomChance(
+                            WellFedConfig.get().villageChestLootChancePercent() / 100.0F
+                    ))
                     .add(LootItem.lootTableItem(ModBlocks.FEEDING_TROUGH).setWeight(1))
                     .add(LootItem.lootTableItem(ModBlocks.FOOD_BOWL).setWeight(1));
 

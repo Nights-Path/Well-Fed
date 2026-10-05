@@ -24,7 +24,7 @@ public final class VillageDecorationData extends SavedData {
 
     public static final SavedDataType<VillageDecorationData> TYPE =
             new SavedDataType<>(
-                    WellFed.id("village_decorations"),
+                    WellFed.id("village_features"),
                     VillageDecorationData::new,
                     CODEC,
                     null
